@@ -5,19 +5,15 @@ import { knex } from '../database';
 import { checkSessionIdExists } from '../middlewares/check-session-id-exists';
 
 export async function transactionsRoutes(app: FastifyInstance) {
-  app.get(
-    '/',
-    { preHandler: [checkSessionIdExists] },
-    async (request, reply) => {
-      const { sessionId } = request.cookies;
+  app.get('/', { preHandler: [checkSessionIdExists] }, async (request) => {
+    const { sessionId } = request.cookies;
 
-      const transactions = await knex('transactions')
-        .where('session_id', sessionId)
-        .select('*');
+    const transactions = await knex('transactions')
+      .where('session_id', sessionId)
+      .select('*');
 
-      return { transactions };
-    },
-  );
+    return { transactions };
+  });
 
   app.get('/:id', { preHandler: [checkSessionIdExists] }, async (request) => {
     const { sessionId } = request.cookies;
